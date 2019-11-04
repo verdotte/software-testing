@@ -8,7 +8,7 @@ class BorrowerController {
   static async createBorrower(req, res) {
     const { body } = req;
     const borrower = await Borrower.create({
-      ...body,
+      ...body
     });
 
     return res.status(CREATED).json({
@@ -50,9 +50,7 @@ class BorrowerController {
   static async deleteBorrower(req, res) {
     const { borrower } = req;
 
-    await borrower.updateOne({
-      status: 'deleted',
-    });
+    await borrower.deleteOne();
 
     return res.status(OK).json({
       status: OK,

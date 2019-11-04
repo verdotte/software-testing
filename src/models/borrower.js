@@ -1,29 +1,72 @@
-import { Schema, model } from 'mongoose';
+import mongoose from 'mongoose';
+// import slug from 'mongoose-slug-generator';
+import encrypt from '../helpers/encrypt';
 
-const borrowerSchema = new Schema({
-  firstname: {
-    type: String,
-    required: true,
+// mongoose.plugin(slug);
+
+const borrowerSchema = mongoose.Schema({
+  borrowerInfo: {
+    firstname: {
+      type: String,
+      required: true,
+    },
+    lastname: {
+      type: String,
+    },
+    idNumber: {
+      type: String,
+      required: true,
+    },
+    phone: {
+      type: String,
+      required: true,
+    },
+    address: {
+      type: String,
+      required: true,
+    },
   },
-  lastname: {
-    type: String,
+  loanInfo: {
+    security: {
+      type: String,
+      required: true,
+    },
+    amountBorrowed: {
+      type: Number,
+      required: true,
+    },
+    amountReturn: {
+      type: Number,
+      required: true,
+    },
+    interestRate: {
+      type: String,
+      required: true,
+    },
+    createdAt: {
+      type: Date,
+      default: new Date(),
+    },
+    returnDate: {
+      type: Date,
+      required: true,
+    },
+    paid: {
+      type: Boolean,
+      default: false,
+    },
   },
-  idNumber: {
-    type: Number,
-    required: true,
-  },
-  phone: {
+  slug: {
     type: String,
-    required: true,
+    unique: true
   },
-  address: {
-    type: String,
-    required: true,
-  },
-  status: {
-    type: String,
-    default: 'active',
-  }
 });
 
-export default model('Borrower', borrowerSchema);
+borrowerSchema.pre('save', function cb(next) {
+  if (!this.slug) {
+    this.slug = encrypt.slugGenerator(this.borrowerInfo.firstname);
+  }
+  next();
+});
+
+export default mongoose.model('Borrower', borrowerSchema);

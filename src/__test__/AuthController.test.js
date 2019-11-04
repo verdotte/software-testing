@@ -1,16 +1,16 @@
 import request from 'supertest';
 import app from '../../server';
-// import { User } from '../models';
+// import { Borrower } from '../models';
 
 const url = '/api/v1/auth';
 const user = {
-  username: 'xouni',
-  email: 'xouni@gmail.com',
-  password: 'res876uivxte',
+  username: 'lxouni',
+  email: 'lxouni@gmail.com',
+  password: 'rles876uivxte',
 };
 
 // afterAll(async () => {
-//   await User.remove({});
+//   await Borrower.remove({});
 // });
 
 describe('Account creation', () => {
