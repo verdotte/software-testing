@@ -19,6 +19,10 @@ class Authentication {
     const token = jwt.sign({ _id }, JWT_SECRET, { expiresIn: '2d' });
     return token;
   }
+
+  static slugGenerator(name) {
+    return name + Math.random().toString(36).substring(2, 15);
+  }
 }
 
 export default Authentication;

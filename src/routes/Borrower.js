@@ -1,16 +1,24 @@
 import express from 'express';
 import BorrowerController from '../controllers/BorrowerController';
 import { asyncHandler, checkBorrower, checkAuth } from '../middlewares';
+import { borrowerValidation } from '../middlewares/validations';
 
 const router = express.Router();
 
 router
   .route('/')
-  .post(asyncHandler(checkAuth), asyncHandler(BorrowerController.createBorrower))
-  .get(asyncHandler(checkAuth), asyncHandler(BorrowerController.getBorrowers));
+  .post(
+    asyncHandler(checkAuth),
+    asyncHandler(borrowerValidation.validateBorrower),
+    asyncHandler(BorrowerController.createBorrower)
+  )
+  .get(
+    asyncHandler(checkAuth),
+    asyncHandler(BorrowerController.getBorrowers)
+  );
 
 router
-  .route('/:borrowid')
+  .route('/:slug')
   .get(
     asyncHandler(checkAuth),
     asyncHandler(checkBorrower),
@@ -18,6 +26,7 @@ router
   )
   .put(
     asyncHandler(checkAuth),
+    asyncHandler(borrowerValidation.validateBorrower),
     asyncHandler(checkBorrower),
     asyncHandler(BorrowerController.updateBorrower)
   )

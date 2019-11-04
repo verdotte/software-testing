@@ -4,10 +4,10 @@ import {
 } from '../constants/statusCodes';
 
 const checkBorrower = async (req, res, next) => {
-  const { borrowid } = req.params;
+  const { slug } = req.params;
 
-  const borrowerFound = await Borrower.findById({
-    _id: borrowid
+  const borrowerFound = await Borrower.findOne({
+    slug
   });
 
   if (!borrowerFound) {
