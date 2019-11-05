@@ -28,6 +28,18 @@ class User {
     }
     return errors.errorResponse(res, error);
   }
+
+  static updateCapital(req, res, next) {
+    const schema = Joi.object().keys({
+      capital: Joi.number().required(),
+    });
+
+    const { error } = Joi.validate(req.body, schema);
+    if (!error) {
+      return next();
+    }
+    return errors.errorResponse(res, error);
+  }
 }
 
 export default User;

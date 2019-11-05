@@ -49,6 +49,34 @@ class AuthController {
       token,
     });
   }
+
+  static async profile(req, res) {
+    const { username, capital } = req.currentUser;
+
+    return res.status(OK).json({
+      status: OK,
+      profile: {
+        username,
+        capital
+      }
+    });
+  }
+
+  static async updateProfile(req, res) {
+    const { currentUser } = req;
+    const { body } = req;
+
+    await User.updateOne(
+      { capital: currentUser.capital },
+      { capital: currentUser.capital + body.capital }
+    );
+
+    return res.status(OK).json({
+      status: OK,
+      profile: { capital: body.capital },
+      message: 'updated',
+    });
+  }
 }
 
 export default AuthController;
