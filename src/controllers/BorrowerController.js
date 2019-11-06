@@ -1,4 +1,4 @@
-import { Borrower } from '../models';
+import { Borrower, User } from '../models';
 import {
   CREATED,
   OK
@@ -34,11 +34,20 @@ class BorrowerController {
   }
 
   static async updateBorrower(req, res) {
-    const { borrower, body } = req;
+    const { borrower, body, currentUser } = req;
+    const { paid } = body;
+    const { amountBorrowed } = borrower.loanInfo;
 
     await borrower.updateOne({
       ...body
     });
+
+    if (paid) {
+      await User.updateOne(
+        { capital: currentUser.capital },
+        { capital: currentUser.capital + amountBorrowed }
+      );
+    }
 
     return res.status(OK).json({
       status: OK,

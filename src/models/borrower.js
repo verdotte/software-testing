@@ -51,14 +51,14 @@ const borrowerSchema = mongoose.Schema({
       type: Date,
       required: true,
     },
-    paid: {
-      type: Boolean,
-      default: false,
-    },
   },
   slug: {
     type: String,
     unique: true
+  },
+  paid: {
+    type: Boolean,
+    default: false,
   },
 });
 
