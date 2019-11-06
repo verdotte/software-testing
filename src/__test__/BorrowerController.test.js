@@ -5,15 +5,25 @@ import { User, Token } from '../models';
 let token;
 let user1;
 let tokenData;
-let borrowerid;
-const username1 = 'xouni';
+let borrowerslug;
+const username1 = 'youni';
 const url = '/api/v1/borrower';
 
 const borrowerData = {
-  firstname: 'Alex',
-  idNumber: 22221234,
-  phone: '+256782222238',
-  address: 'Kansanga'
+  borrowerInfo: {
+    firstname: 'Levi',
+    lastname: 'Amani',
+    idNumber: '129G235',
+    phone: '0786666321',
+    address: 'Mango'
+  },
+  loanInfo: {
+    security: 'DVD',
+    amountBorrowed: 125000,
+    amountReturn: 16500000,
+    interestRate: '1.2%',
+    returnDate: '2019-11-21'
+  }
 };
 
 describe('Borrower', () => {
@@ -30,7 +40,8 @@ describe('Borrower', () => {
         .set('Authorization', token)
         .send(borrowerData);
       expect(res.status).toBe(201);
-      expect(res.body.borrower).toHaveProperty('firstname');
+      expect(res.body.borrower).toHaveProperty('borrowerInfo');
+      expect(res.body.borrower).toHaveProperty('loanInfo');
     });
 
     test('Should return `Unauthorized access`', async () => {
@@ -48,24 +59,25 @@ describe('Borrower', () => {
         .post(`${url}`)
         .set('Authorization', token)
         .send(borrowerData);
-      borrowerid = res.body.borrower._id;
+      borrowerslug = res.body.borrower.slug;
     });
 
     test('should return a `updated borrower`', (done) => {
       request(app)
-        .put(`${url}/${borrowerid}`)
+        .put(`${url}/${borrowerslug}`)
         .set('Authorization', token)
         .end((err, res) => {
           if (err) done(err);
           expect(res.body.status).toBe(200);
-          expect(res.body.borrower).toHaveProperty('firstname');
+          expect(res.body.borrower).toHaveProperty('borrowerInfo');
+          expect(res.body.borrower).toHaveProperty('loanInfo');
           done();
         });
     });
 
     test('Should return `Unauthorized access`', (done) => {
       request(app)
-        .put(`${url}/${borrowerid}`)
+        .put(`${url}/${borrowerslug}`)
         .end((err, res) => {
           if (err) done(err);
           expect(res.status).toBe(401);
@@ -81,17 +93,18 @@ describe('Borrower', () => {
         .post(`${url}`)
         .set('Authorization', token)
         .send(borrowerData);
-      borrowerid = res.body.borrower._id;
+      borrowerslug = res.body.borrower.slug;
     });
 
     test('should return `a borrower`', (done) => {
       request(app)
-        .get(`${url}/${borrowerid}`)
+        .get(`${url}/${borrowerslug}`)
         .set('Authorization', token)
         .end((err, res) => {
           if (err) done(err);
           expect(res.body.status).toBe(200);
-          expect(res.body.borrower).toHaveProperty('firstname');
+          expect(res.body.borrower).toHaveProperty('borrowerInfo');
+          expect(res.body.borrower).toHaveProperty('loanInfo');
           done();
         });
     });
@@ -112,19 +125,20 @@ describe('Borrower', () => {
   describe('Delete Borrower', () => {
     test('Should return `deleted borrower`', (done) => {
       request(app)
-        .delete(`${url}/${borrowerid}`)
+        .delete(`${url}/${borrowerslug}`)
         .set('Authorization', token)
         .end((err, res) => {
           if (err) done(err);
           expect(res.body.status).toBe(200);
-          expect(res.body.borrower).toHaveProperty('firstname');
+          expect(res.body.borrower).toHaveProperty('borrowerInfo');
+          expect(res.body.borrower).toHaveProperty('loanInfo');
           done();
         });
     });
 
     test('Should return `Unauthorized access`', (done) => {
       request(app)
-        .delete(`${url}/${borrowerid}`)
+        .delete(`${url}/${borrowerslug}`)
         .end((err, res) => {
           if (err) done(err);
           expect(res.status).toBe(401);

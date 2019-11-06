@@ -18,6 +18,7 @@ class Borrower {
         interestRate: Joi.string().required(),
         returnDate: Joi.date().required(),
       },
+      paid: Joi.bool(),
     });
 
     const { error } = Joi.validate(req.body, schema);
