@@ -1,15 +1,30 @@
 import { Borrower, User } from '../models';
 import {
   CREATED,
-  OK
+  OK,
+  FORBIDDEN
 } from '../constants/statusCodes';
 
 class BorrowerController {
   static async createBorrower(req, res) {
-    const { body } = req;
+    const { body, currentUser } = req;
+    const { amountBorrowed } = body.loanInfo;
+
+    if (amountBorrowed > currentUser.capital) {
+      return res.status(FORBIDDEN).json({
+        status: FORBIDDEN,
+        message: 'cannot borrow more than capital',
+      });
+    }
+
     const borrower = await Borrower.create({
       ...body
     });
+
+    await User.updateOne(
+      { capital: currentUser.capital },
+      { capital: currentUser.capital - amountBorrowed }
+    );
 
     return res.status(CREATED).json({
       status: CREATED,
